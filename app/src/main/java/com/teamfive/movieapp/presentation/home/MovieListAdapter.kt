@@ -6,14 +6,14 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.teamfive.movieapp.R
-import com.teamfive.movieapp.data.MovieModel
 import com.teamfive.movieapp.databinding.AdapterMovieItemBinding
+import com.teamfive.movieapp.domain.model.Movie
 
 /**
  * Created by EsraAvsar on 18.11.2023.
  */
 class MovieListAdapter(
-    private val movieList: ArrayList<MovieModel>
+    private val movieList: ArrayList<Movie>
 ) : RecyclerView.Adapter<MovieListAdapter.MovieHolder>() {
 
     class MovieHolder(val binding: AdapterMovieItemBinding) : RecyclerView.ViewHolder(binding.root)
@@ -34,9 +34,9 @@ class MovieListAdapter(
 //            Navigation.findNavController(it).navigate(action)
         }
 
-        holder.binding.tvMovieTitle.text = movie.title
+        holder.binding.tvMovieTitle.text = movie.Title
         Glide.with(holder.binding.ivMovie.context)
-            .load(movie.image)
+            .load(movie.Poster)
             .into(holder.binding.ivMovie)
     }
 
