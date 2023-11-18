@@ -1,5 +1,7 @@
 package com.teamfive.movieapp.domain.use_case.get_movie_detail
 
+import com.teamfive.movieapp.data.mappers.toMovieDetail
+import com.teamfive.movieapp.data.remote.MovieApi
 import com.teamfive.movieapp.domain.model.MovieDetail
 import com.teamfive.movieapp.domain.repository.MovieRepository
 import com.teamfive.movieapp.util.Resource
@@ -9,17 +11,20 @@ import retrofit2.HttpException
 import java.io.IOError
 import javax.inject.Inject
 
-class GetMovieDetailsUseCase @Inject constructor(private val repository : MovieRepository) {
+class GetMovieDetailsUseCase @Inject constructor(private val movieApi : MovieApi) {
 
-    fun executeGetMovieDetails(imdbId: String) : Flow<Resource<MovieDetail>> = flow {
-        try {
-            emit(Resource.loading(null))
-            val movieDetail = repository.getMovieDetail(imdbId = imdbId).toMovieDetail()
-            emit(Resource.success(movieDetail))
-        } catch (e: HttpException) {
-            emit(Resource.error("Error!",null))
+    suspend fun executeGetMovieDetails(imdbId: String) : Resource<MovieDetail> {
+        return try{
+            val response=movieApi.getDetailMovie(imdbId)
+            if (response.isSuccessful) {
+                response.body()?.let{
+                    return@let Resource.success(it.toMovieDetail())
+                } ?:Resource.error("Error",null)
+            }else {
+                Resource.error("Response error",null)
+            }
         } catch (e: IOError) {
-            emit(Resource.error( "Could not reach internet",null))
+            Resource.error( "Could not reach internet",null)
         }
     }
 }
