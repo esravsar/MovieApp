@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.teamfive.movieapp.R
 import com.teamfive.movieapp.databinding.AdapterMovieItemBinding
 import com.teamfive.movieapp.domain.model.Movie
 
@@ -28,13 +27,12 @@ class MovieListAdapter(
         val movie = movieList.get(position)
 
         holder.itemView.setOnClickListener {
-            Navigation.findNavController(it).navigate(R.id.action_listFragment_to_detailFragment)
-
-//            val action = ListFragmentDirections.actionListFragmentToDetailFragment()
-//            Navigation.findNavController(it).navigate(action)
+            val action = ListFragmentDirections.actionListFragmentToDetailFragment(movie.imdbID)
+            Navigation.findNavController(it).navigate(action)
         }
 
         holder.binding.tvMovieTitle.text = movie.Title
+        holder.binding.tvMovieRelease.text = movie.Year
         Glide.with(holder.binding.ivMovie.context)
             .load(movie.Poster)
             .into(holder.binding.ivMovie)

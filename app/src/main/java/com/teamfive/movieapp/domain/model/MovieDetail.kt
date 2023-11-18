@@ -1,6 +1,5 @@
 package com.teamfive.movieapp.domain.model
 
-
 data class MovieDetail(
     val Actors: String,
     val Awards: String,

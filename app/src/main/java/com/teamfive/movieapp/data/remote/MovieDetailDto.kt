@@ -14,7 +14,7 @@ data class MovieDetailDto(
     val Poster: String,
     val Production: String,
     val Rated: String,
-    val ratingDtos: List<RatingDto>,
+    val Ratings: List<RatingDto>,
     val Released: String,
     val Response: String,
     val Runtime: String,

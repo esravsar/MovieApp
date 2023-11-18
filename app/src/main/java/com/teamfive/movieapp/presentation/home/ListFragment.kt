@@ -35,6 +35,8 @@ class ListFragment : Fragment() {
 
         observeLiveData()
 
+        viewModel.loadData("Batman")
+
         searchQueryControl()
     }
 
@@ -74,11 +76,16 @@ class ListFragment : Fragment() {
         binding.searchView.setOnQueryTextListener(object : OnQueryTextListener {
             override fun onQueryTextSubmit(text: String?): Boolean {
                 searchMovie(text)
+                binding.searchView.clearFocus()
                 return true
             }
 
             override fun onQueryTextChange(text: String?): Boolean {
-                searchMovie(text)
+                if (text?.isEmpty() == true) {
+                    viewModel.loadData("Batman")
+                } else {
+                    searchMovie(text)
+                }
                 return true
             }
         })

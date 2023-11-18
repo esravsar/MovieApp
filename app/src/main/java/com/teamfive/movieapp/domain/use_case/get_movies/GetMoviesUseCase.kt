@@ -15,7 +15,7 @@ class GetMoviesUseCase @Inject constructor(val movieApi: MovieApi) {
             val response = search?.let { movieApi.getMovieList(it) }
             if (response?.isSuccessful == true) {
                 response.body()?.let { movieListDto ->
-                    return@let Resource.success(movieListDto.SearchDto.map { it.toMovie() })
+                    return@let Resource.success(movieListDto.Search?.map { it.toMovie() })
                 } ?: Resource.error("No movie found", null)
             } else {
                 Resource.error("No movie found", null)
