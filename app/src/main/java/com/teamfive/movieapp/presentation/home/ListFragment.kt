@@ -4,10 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.teamfive.movieapp.data.MovieModel
 import com.teamfive.movieapp.databinding.FragmentListBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -31,23 +32,61 @@ class ListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
         binding.rvMovie.layoutManager = LinearLayoutManager(requireContext())
-        val list = ArrayList<MovieModel>()
-        val m1 = MovieModel(
-            "Batman",
-            "https://m.media-amazon.com/images/M/MV5BOTY4YjI2N2MtYmFlMC00ZjcyLTg3YjEtMDQyM2ZjYzQ5YWFkXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg"
-        )
-        val m2 = MovieModel(
-            "Batman2",
-            "https://m.media-amazon.com/images/M/MV5BOTY4YjI2N2MtYmFlMC00ZjcyLTg3YjEtMDQyM2ZjYzQ5YWFkXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg"
-        )
-        val m3 = MovieModel(
-            "Batman3",
-            "https://m.media-amazon.com/images/M/MV5BOTY4YjI2N2MtYmFlMC00ZjcyLTg3YjEtMDQyM2ZjYzQ5YWFkXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg"
-        )
-        list.add(m1)
-        list.add(m2)
-        list.add(m3)
-        movieAdapter = MovieListAdapter(list)
-        binding.rvMovie.adapter = movieAdapter
+
+        observeLiveData()
+
+        searchQueryControl()
+    }
+
+    private fun observeLiveData() {
+        viewModel.movieList.observe(viewLifecycleOwner, Observer { movies ->
+            binding.tvErrorText.visibility = View.GONE
+            binding.rvMovie.visibility = View.VISIBLE
+            movieAdapter = MovieListAdapter(ArrayList(movies.data))
+            binding.rvMovie.adapter = movieAdapter
+        })
+
+        viewModel.movieError.observe(viewLifecycleOwner, Observer { error ->
+            error.data?.let {
+                if (it) {
+                    binding.tvErrorText.visibility = View.VISIBLE
+                    binding.rvMovie.visibility = View.GONE
+                } else {
+                    binding.tvErrorText.visibility = View.GONE
+                }
+            }
+        })
+
+        viewModel.movieLoading.observe(viewLifecycleOwner, Observer { loading ->
+            loading.data?.let {
+                if (it) {
+                    binding.progressBar.visibility = View.VISIBLE
+                    binding.rvMovie.visibility = View.GONE
+                    binding.tvErrorText.visibility = View.GONE
+                } else {
+                    binding.progressBar.visibility = View.GONE
+                }
+            }
+        })
+    }
+
+    private fun searchQueryControl() {
+        binding.searchView.setOnQueryTextListener(object : OnQueryTextListener {
+            override fun onQueryTextSubmit(text: String?): Boolean {
+                searchMovie(text)
+                return true
+            }
+
+            override fun onQueryTextChange(text: String?): Boolean {
+                searchMovie(text)
+                return true
+            }
+        })
+    }
+
+    private fun searchMovie(searchText: String?) {
+        if (searchText != null) {
+            viewModel.loadData(searchText)
+        }
     }
 }

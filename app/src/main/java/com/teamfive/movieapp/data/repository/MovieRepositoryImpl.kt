@@ -1,7 +1,5 @@
 package com.teamfive.movieapp.data.repository
 
-import com.teamfive.movieapp.data.remote.MovieListDto
-import com.teamfive.movieapp.data.remote.MovieDetailDto
 import com.teamfive.movieapp.domain.model.Movie
 import com.teamfive.movieapp.domain.model.MovieDetail
 import com.teamfive.movieapp.domain.repository.MovieRepository
@@ -14,12 +12,11 @@ class MovieRepositoryImpl @Inject constructor(
     private val getMoviesUseCase: GetMoviesUseCase,
     private val getMovieDetailsUseCase: GetMovieDetailsUseCase
 ) : MovieRepository {
-    override suspend fun getMovies(search: String): Resource<List<Movie>> {
+    override suspend fun getMovies(search: String?): Resource<List<Movie>> {
         return getMoviesUseCase.executeGetMovies(search)
     }
 
     override suspend fun getMovieDetail(imdbId: String): Resource<MovieDetail> {
         return getMovieDetailsUseCase.executeGetMovieDetails(imdbId)
     }
-
 }
