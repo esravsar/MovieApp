@@ -33,16 +33,16 @@ class ListFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
         binding.rvMovie.layoutManager = LinearLayoutManager(requireContext())
 
-        searchQueryControl()
-
         observeLiveData()
+
+        searchQueryControl()
     }
 
     private fun observeLiveData() {
         viewModel.movieList.observe(viewLifecycleOwner, Observer { movies ->
             binding.tvErrorText.visibility = View.GONE
             binding.rvMovie.visibility = View.VISIBLE
-            movieAdapter = MovieListAdapter(ArrayList(movies.data ?: arrayListOf()))
+            movieAdapter = MovieListAdapter(ArrayList(movies.data))
             binding.rvMovie.adapter = movieAdapter
         })
 
@@ -72,19 +72,19 @@ class ListFragment : Fragment() {
 
     private fun searchQueryControl() {
         binding.searchView.setOnQueryTextListener(object : OnQueryTextListener {
-            override fun onQueryTextSubmit(text: String): Boolean {
+            override fun onQueryTextSubmit(text: String?): Boolean {
                 searchMovie(text)
                 return true
             }
 
-            override fun onQueryTextChange(text: String): Boolean {
+            override fun onQueryTextChange(text: String?): Boolean {
                 searchMovie(text)
                 return true
             }
         })
     }
 
-    private fun searchMovie(searchText: String) {
+    private fun searchMovie(searchText: String?) {
         if (searchText != null) {
             viewModel.loadData(searchText)
         }

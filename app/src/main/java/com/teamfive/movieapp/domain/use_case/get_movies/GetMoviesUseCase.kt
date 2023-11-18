@@ -8,12 +8,12 @@ import retrofit2.HttpException
 import java.io.IOError
 import javax.inject.Inject
 
-class GetMoviesUseCase @Inject constructor(private val movieApi: MovieApi) {
+class GetMoviesUseCase @Inject constructor(val movieApi: MovieApi) {
 
-    suspend fun executeGetMovies(search: String): Resource<List<Movie>> {
+    suspend fun executeGetMovies(search: String?): Resource<List<Movie>> {
         return try {
-            val response = movieApi.getMovieList(search)
-            if (response.isSuccessful) {
+            val response = search?.let { movieApi.getMovieList(it) }
+            if (response?.isSuccessful == true) {
                 response.body()?.let { movieListDto ->
                     return@let Resource.success(movieListDto.SearchDto.map { it.toMovie() })
                 } ?: Resource.error("No movie found", null)

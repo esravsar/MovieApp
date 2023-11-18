@@ -12,30 +12,31 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import javax.inject.Singleton
 
+@Module
+@InstallIn(SingletonComponent::class)
 object MovieAppModule {
-    @Module
-    @InstallIn(SingletonComponent::class)
-    object AppModule{
-        @Singleton
-        @Provides
-        fun createRetrofit() : Retrofit {
-            return Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(BASE_URL)
-                .build()
-        }
 
-        @Singleton
-        @Provides
-        fun createMovieApi(retrofit: Retrofit): MovieApi {
-            return retrofit.create(MovieApi::class.java)
-        }
-
-        @Singleton
-        @Provides
-        fun injectMovieRepo(getMoviesUseCase: GetMoviesUseCase,getMovieDetailsUseCase: GetMovieDetailsUseCase) = MovieRepositoryImpl(getMoviesUseCase,getMovieDetailsUseCase) as MovieRepository
+    @Singleton
+    @Provides
+    fun createRetrofit(): Retrofit {
+        return Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(BASE_URL)
+            .build()
     }
+
+    @Singleton
+    @Provides
+    fun createMovieApi(retrofit: Retrofit): MovieApi {
+        return retrofit.create(MovieApi::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun injectMovieRepo(
+        getMoviesUseCase: GetMoviesUseCase,
+        getMovieDetailsUseCase: GetMovieDetailsUseCase
+    ) = MovieRepositoryImpl(getMoviesUseCase, getMovieDetailsUseCase) as MovieRepository
 }
