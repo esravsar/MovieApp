@@ -18,15 +18,16 @@
 
     <TextView
         android:id="@+id/tvMovieTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="190dp"
         android:layout_height="wrap_content"
-        android:text="Batman"
+        android:paddingEnd="8dp"
+        android:text="Batman Batman Batman "
+        android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:textColor="@color/white"
-        app:layout_constraintStart_toEndOf="@id/ivMovie"
-        app:layout_constraintTop_toTopOf="@id/ivMovie"
         app:layout_constraintBottom_toBottomOf="@id/ivMovie"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ivMovie"
+        app:layout_constraintTop_toTopOf="@id/ivMovie" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

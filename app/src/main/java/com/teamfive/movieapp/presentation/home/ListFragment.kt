@@ -8,9 +8,12 @@ import android.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.teamfive.movieapp.databinding.FragmentListBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ListFragment : Fragment() {
@@ -34,6 +37,8 @@ class ListFragment : Fragment() {
         binding.rvMovie.layoutManager = LinearLayoutManager(requireContext())
 
         observeLiveData()
+
+        viewModel.loadData("Batman")
 
         searchQueryControl()
     }
@@ -63,6 +68,11 @@ class ListFragment : Fragment() {
                     binding.progressBar.visibility = View.VISIBLE
                     binding.rvMovie.visibility = View.GONE
                     binding.tvErrorText.visibility = View.GONE
+                    lifecycleScope.launch {
+                        delay(3000)
+                        binding.tvErrorText.visibility = View.VISIBLE
+                        binding.progressBar.visibility = View.GONE
+                    }
                 } else {
                     binding.progressBar.visibility = View.GONE
                 }

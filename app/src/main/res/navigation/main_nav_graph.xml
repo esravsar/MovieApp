@@ -17,5 +17,9 @@
         android:id="@+id/detailFragment"
         android:name="com.teamfive.movieapp.presentation.detail.DetailFragment"
         android:label="fragment_detail"
-        tools:layout="@layout/fragment_detail" />
+        tools:layout="@layout/fragment_detail" >
+        <argument
+            android:name="imdbID"
+            app:argType="string" />
+    </fragment>
 </navigation>
