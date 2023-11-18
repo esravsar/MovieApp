@@ -1,5 +1,6 @@
 package com.teamfive.movieapp.di
 
+import com.teamfive.movieapp.data.remote.MovieApi
 import com.teamfive.movieapp.util.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -7,6 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 import javax.inject.Singleton
 
 object MovieAppModule {
@@ -20,6 +22,12 @@ object MovieAppModule {
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(BASE_URL)
                 .build()
+        }
+
+        @Singleton
+        @Provides
+        fun createMovieApi(retrofit: Retrofit): MovieApi {
+            return retrofit.create(MovieApi::class.java)
         }
     }
 }
