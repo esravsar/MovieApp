@@ -1,7 +1,7 @@
 package com.teamfive.movieapp.presentation
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.teamfive.movieapp.R
 
 class MainActivity : AppCompatActivity() {
