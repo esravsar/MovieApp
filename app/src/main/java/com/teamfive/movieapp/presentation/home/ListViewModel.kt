@@ -31,6 +31,10 @@ class ListViewModel @Inject constructor(private val movieRepository: MovieReposi
         viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
             val resource = movieRepository.getMovies(value)
             withContext(Dispatchers.Main) {
+                if (resource.data.isNullOrEmpty()) {
+                    movieError.value = Resource.error("", true)
+                    movieLoading.value = Resource.loading(false)
+                }
                 resource.data?.let {
                     movieLoading.value = Resource.loading(false)
                     movieError.value = Resource.error("", false)

@@ -32,6 +32,7 @@ class MovieListAdapter(
         }
 
         holder.binding.tvMovieTitle.text = movie.Title
+        holder.binding.tvMovieRelease.text = movie.Year
         Glide.with(holder.binding.ivMovie.context)
             .load(movie.Poster)
             .into(holder.binding.ivMovie)

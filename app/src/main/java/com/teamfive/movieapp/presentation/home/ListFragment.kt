@@ -8,12 +8,9 @@ import android.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.teamfive.movieapp.databinding.FragmentListBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ListFragment : Fragment() {
@@ -68,11 +65,6 @@ class ListFragment : Fragment() {
                     binding.progressBar.visibility = View.VISIBLE
                     binding.rvMovie.visibility = View.GONE
                     binding.tvErrorText.visibility = View.GONE
-                    lifecycleScope.launch {
-                        delay(3000)
-                        binding.tvErrorText.visibility = View.VISIBLE
-                        binding.progressBar.visibility = View.GONE
-                    }
                 } else {
                     binding.progressBar.visibility = View.GONE
                 }
@@ -84,11 +76,16 @@ class ListFragment : Fragment() {
         binding.searchView.setOnQueryTextListener(object : OnQueryTextListener {
             override fun onQueryTextSubmit(text: String?): Boolean {
                 searchMovie(text)
+                binding.searchView.clearFocus()
                 return true
             }
 
             override fun onQueryTextChange(text: String?): Boolean {
-                searchMovie(text)
+                if (text?.isEmpty() == true) {
+                    viewModel.loadData("Batman")
+                } else {
+                    searchMovie(text)
+                }
                 return true
             }
         })

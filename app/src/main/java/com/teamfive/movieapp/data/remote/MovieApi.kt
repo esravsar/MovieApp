@@ -13,7 +13,7 @@ interface MovieApi {
         @Query("apikey") apiKey: String = BuildConfig.API_KEY
     ): Response<MovieListDto>
 
-    @GET("/")
+    @GET(".")
     suspend fun getDetailMovie(
         @Query("i") imdbID: String,
         @Query("plot") plot: String = "full",
