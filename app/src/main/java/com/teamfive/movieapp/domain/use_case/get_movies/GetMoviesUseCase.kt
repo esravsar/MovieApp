@@ -1,5 +1,7 @@
 package com.teamfive.movieapp.domain.use_case.get_movies
 
+import com.teamfive.movieapp.data.mappers.toMovie
+import com.teamfive.movieapp.data.remote.MovieApi
 import com.teamfive.movieapp.domain.model.Movie
 import com.teamfive.movieapp.domain.repository.MovieRepository
 import com.teamfive.movieapp.util.Resource
@@ -9,21 +11,22 @@ import retrofit2.HttpException
 import java.io.IOError
 import javax.inject.Inject
 
-class GetMoviesUseCase @Inject constructor(private val repository : MovieRepository) {
+class GetMoviesUseCase @Inject constructor(private val movieApi: MovieApi) {
 
-    fun executeGetMovies(search: String) : Flow<Resource<List<Movie>>> = flow {
-        try {
-            emit(Resource.loading(null))
-            val movieList = repository.getMovies(search)
-            if(movieList.Response.equals("True")) {
-                emit(Resource.success(movieList.toMovieList()))
+    suspend fun executeGetMovies(search: String) : Resource<List<Movie>> {
+        return try {
+            val response=movieApi.getMovieList(search)
+            if (response.isSuccessful){
+                response.body()?.let { movieListDto->
+                    return@let Resource.success(movieListDto.SearchDto.map { it.toMovie() })
+                } ?: Resource.error("No movie found\"",null)
             } else {
-                emit(Resource.error("No movie found",null))
+                Resource.error("No movie found",null)
             }
         } catch (e: HttpException) {
-            emit(Resource.error("Error!",null))
+            Resource.error("Error!",null)
         } catch (e: IOError) {
-            emit(Resource.error( "Could not reach internet",null))
+            Resource.error( "Could not reach internet",null)
         }
     }
 }
