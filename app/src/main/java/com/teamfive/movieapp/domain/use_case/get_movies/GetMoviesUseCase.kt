@@ -2,6 +2,7 @@ package com.teamfive.movieapp.domain.use_case.get_movies
 
 import com.teamfive.movieapp.domain.model.Movie
 import com.teamfive.movieapp.domain.repository.MovieRepository
+import com.teamfive.movieapp.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
@@ -12,17 +13,17 @@ class GetMoviesUseCase @Inject constructor(private val repository : MovieReposit
 
     fun executeGetMovies(search: String) : Flow<Resource<List<Movie>>> = flow {
         try {
-            emit(Resource.Loading())
+            emit(Resource.loading(null))
             val movieList = repository.getMovies(search)
             if(movieList.Response.equals("True")) {
-                emit(Resource.Success(movieList.toMovieList()))
+                emit(Resource.success(movieList.toMovieList()))
             } else {
-                emit(Resource.Error(message = "No movie found"))
+                emit(Resource.error("No movie found",null))
             }
         } catch (e: HttpException) {
-            emit(Resource.Error(message = e.localizedMessage ?: "Error!"))
+            emit(Resource.error("Error!",null))
         } catch (e: IOError) {
-            emit(Resource.Error(message = "Could not reach internet"))
+            emit(Resource.error( "Could not reach internet",null))
         }
     }
 }

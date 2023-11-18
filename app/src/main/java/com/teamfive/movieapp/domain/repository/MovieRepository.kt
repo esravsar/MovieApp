@@ -1,7 +1,8 @@
 package com.teamfive.movieapp.domain.repository
 
-import com.teamfive.movieapp.data.remote.dto.MovieDetailDto
-import com.teamfive.movieapp.data.remote.dto.BatmanListDto
+import com.teamfive.movieapp.data.remote.BatmanListDto
+import com.teamfive.movieapp.data.remote.MovieDetailDto
+
 
 interface MovieRepository {
     suspend fun getMovies(search : String) : BatmanListDto
